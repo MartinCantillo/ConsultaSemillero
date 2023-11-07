@@ -1,8 +1,8 @@
-from Config import app,bd,ma
+from config.bd import app,bd,ma
 
 class Profesor(bd.Model):
     __tablename__="tblProfesor"
-    codigoProfesor=bd.Column(bd.Integer,primary_Key=True)
+    codigoProfesor=bd.Column(bd.Integer,primary_key=True)
     codigo=bd.Column(bd.Integer,unique=True) #Campo unico
     telefono=bd.Column(bd.String(50))
     nombre=bd.Column(bd.String(50))
@@ -23,6 +23,6 @@ with app.app_context():
     bd.create_all()
 
 #Descerializacion
-class ProfesorSchema(ma.schema):
+class ProfesorSchema(ma.Schema):
     class Meta:
         fields=("codigo","telefono","nombre","nombre","Apellido","correo")

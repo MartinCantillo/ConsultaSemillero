@@ -1,13 +1,13 @@
-from Config import ma,app,bd
+from config.bd import ma,app,bd
 
 class Semillero(bd.Model):
     __tablename__="tblSemillero"
-    codigoSemillero=bd.column(bd.Integer,primeary_Key=True)
-    nombre=bd.column(bd.String(50))
-    codigoColciencias=bd.column(bd.String(50))
-    facultad=bd.column(bd.String(50))
-    idProyectoFk =bd.column(bd.integer,bd.ForeignKey("tblProyecto.codProyecto"))#Relacion con proyecto
-    idGrupoInFk =bd.column(bd.integer,bd.ForeignKey("tblGInvestigacion.codigoGI"))#Relacion con grupoInvestigacion
+    codigoSemillero = bd.Column(bd.Integer, primary_key = True)
+    nombre=bd.Column(bd.String(50))
+    codigoColciencias=bd.Column(bd.String(50))
+    facultad=bd.Column(bd.String(50))
+    idProyectoFk =bd.Column(bd.Integer,bd.ForeignKey("tblProyecto.codProyecto"))#Relacion con proyecto
+    idGrupoInFk =bd.Column(bd.Integer,bd.ForeignKey("tblGInvestigacion.codigoGI"))#Relacion con grupoInvestigacion
 
     #Constructor
     def __init__(self,nombre,codigoColciencias,facultad,idProyectoFk,idGrupoInFk):

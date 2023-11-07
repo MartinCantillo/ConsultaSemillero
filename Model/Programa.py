@@ -1,11 +1,11 @@
-from Config  import ma, bd, app
 
+from config.bd  import ma, bd, app
 class Programa(bd.Model):
     __tablename__="tblPrograma"
-    codigoPrograma=bd.column(bd.Integer,primeary_Key=True)
-    codigo=bd.column(bd.Integer, unique=True)
-    nombre=bd.column(bd.String(50))
-    facultad=bd.column(bd.String(50))
+    codigoPrograma = bd.Column(bd.Integer, primary_key=True)
+    codigo=bd.Column(bd.Integer, unique=True)
+    nombre=bd.Column(bd.String(50))
+    facultad=bd.Column(bd.String(50))
 
 #Constructor
     def  __init_(self,codigo,nombre,facultad):
@@ -20,6 +20,6 @@ with app.app_context():
 
 
 #Descerializacion
-class ProgramaSchema(ma.schema):
+class ProgramaSchema(ma.Schema):
     class Meta:
         fields=("codigo","nombre","facultad")

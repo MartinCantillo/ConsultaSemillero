@@ -1,4 +1,4 @@
-from Config import  bd,app,ma
+from config.bd import  bd,app,ma
 
 class estudiante(bd.Model):
     __tablename__ ='tblEstudiante'
@@ -24,6 +24,6 @@ with app.app_context():
 
 
 #Descerializacion
-class estudianteSchema(ma.schema):
+class estudianteSchema(ma.Schema):
     class Meta:
         fields=("nombre","apellido","correo","telefono")
