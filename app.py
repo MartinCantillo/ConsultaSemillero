@@ -6,7 +6,7 @@ from Model.GInvestigacion import GrupoInvestigacion_Schema
 from Model.Profesor import ProfesorSchema
 from Model.Programa import ProgramaSchema
 from Model.Proyecto import ProyectoSchema
-from Model.Semillero import SemilleroSchema
+from Model.Semillero import Semillero, SemilleroSchema
 from Model.RelacionProfPro import ProfesorProgramaSchema
 
 
@@ -33,14 +33,28 @@ semilleros_schema = SemilleroSchema(many=True)
 
 profesorProgramaSchema = ProfesorProgramaSchema()
 profesorsProgramaSchema = ProfesorProgramaSchema(many=True)
-
 @app.route("/", methods=["GET"])
 def consultarSemillero():
-   
-    diccionario={
-        "Nombre":"Martin"
-    }
-    return jsonify(diccionario)  
+    semilleros = bd.session.query(Semillero).all()
+
+    resultado = []
+    for semillero in semilleros:
+        info_semillero = {
+             "Nombre del Grupo de Investigación": semillero.idGrupoInFk.nombre,
+            "Líder del Grupo de Investigación": semillero.idGrupoInFk.lider,
+            "Nombre del Semillero": semillero.nombre,
+            "Periodo Académico": semillero.periodo_academico,
+            "Docente líder del semillero": semillero.idProyectoFk.docente_lider,
+            "Proyectos": [proyecto.nombreProyecto for proyecto in semillero.idProyectoFk],
+            "Objetivos": [proyecto.objetivos for proyecto in semillero.idProyectoFk],
+            "Resultados Obtenidos": [proyecto.resultadosObtenidos for proyecto in semillero.idProyectoFk],
+            "Estudiantes": [estudiante.nombre for proyecto in semillero.idProyectoFk for estudiante in proyecto.idEstudianteFk],
+           
+        }
+        resultado.append(info_semillero)
+
+    return jsonify({"semilleros_investigacion": resultado})
+
 
 
 if __name__ == '__main__':
