@@ -2,12 +2,11 @@
 from flask import Flask, request, jsonify
 from config.bd import app, ma, bd
 from Model.Estudiante import estudianteSchema
-from Model.GInvestigacion import GrupoInvestigacion_Schema
 from Model.Profesor import ProfesorSchema
 from Model.Programa import ProgramaSchema
 from Model.Proyecto import ProyectoSchema
+from Model.GInvestigacion import GrupoInvestigacion_Schema
 from Model.Semillero import Semillero, SemilleroSchema
-from Model.RelacionProfPro import ProfesorProgramaSchema
 
 
 Estudiante_schema = estudianteSchema()
@@ -25,14 +24,10 @@ programas_schema = ProgramaSchema(many=True)
 proyectoSchema = ProyectoSchema()
 proyectos_schema = ProyectoSchema(many=True)
 
-profesorProgramaSchema = ProfesorProgramaSchema()
-profesoresProgramas_schema = ProfesorProgramaSchema(many=True)
 
 semilleroSchema = SemilleroSchema()
 semilleros_schema = SemilleroSchema(many=True)
 
-profesorProgramaSchema = ProfesorProgramaSchema()
-profesorsProgramaSchema = ProfesorProgramaSchema(many=True)
 @app.route("/", methods=["GET"])
 def consultarSemillero():
     semilleros = bd.session.query(Semillero).all()
@@ -49,7 +44,7 @@ def consultarSemillero():
             "Objetivos": [proyecto.objetivos for proyecto in semillero.idProyectoFk],
             "Resultados Obtenidos": [proyecto.resultadosObtenidos for proyecto in semillero.idProyectoFk],
             "Estudiantes": [estudiante.nombre for proyecto in semillero.idProyectoFk for estudiante in proyecto.idEstudianteFk],
-           
+           "Profesores": [profesor.nombre for profesor in semillero.idGrupoInFk.profesores] 
         }
         resultado.append(info_semillero)
 

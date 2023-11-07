@@ -8,7 +8,7 @@ class Programa(bd.Model):
     facultad=bd.Column(bd.String(50))
 
 #Constructor
-    def  __init_(self,codigo,nombre,facultad):
+    def  __init__(self,codigo,nombre,facultad):
         self.codigo=codigo
         self.nombre=nombre
         self.facultad=facultad
