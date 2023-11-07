@@ -24,6 +24,6 @@ with app.app_context():
 
 
 #Descerializacion
-class ProyectoSchema(ma.schema):
+class estudianteSchema(ma.schema):
     class Meta:
-        fields=("nombreProyecto","fechaInicio","fechaFinal","objetivos","descripcion","resultadosObtenidos","idEstudianteFk")
+        fields=("nombre","apellido","correo","telefono")

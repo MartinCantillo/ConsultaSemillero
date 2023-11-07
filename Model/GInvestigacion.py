@@ -1,5 +1,4 @@
 from Config import app, bd, ma
-
 class GruppoInvestigacion(bd.Model):
     __Tablename__="tblGInvestigacion"
     codigoGI = bd.Column(bd.Integer, primary_key = True)
@@ -22,6 +21,6 @@ with app.app_context():
     bd.create_all()
 
 #Descerializacion
-class GruppoInvestigacionSchema(ma.schema):
+class GruppoInvestigacion_Schema(ma.schema):
     class Meta:
         fields=("nombre","lider","lineaInvestigacion","idProfesorFk")

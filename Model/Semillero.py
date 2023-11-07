@@ -9,6 +9,7 @@ class Semillero(bd.Model):
     idProyectoFk =bd.column(bd.integer,bd.ForeignKey("tblProyecto.codProyecto"))#Relacion con proyecto
     idGrupoInFk =bd.column(bd.integer,bd.ForeignKey("tblGInvestigacion.codigoGI"))#Relacion con grupoInvestigacion
 
+    #Constructor
     def __init__(self,nombre,codigoColciencias,facultad,idProyectoFk,idGrupoInFk):
         self.nombre=nombre
         self.codigoColciencias= codigoColciencias
@@ -16,13 +17,13 @@ class Semillero(bd.Model):
         self.idProyectoFk=idProyectoFk
         self.idGrupoInFk=idGrupoInFk
 
- #Creación del contexto de la aplicación
+#Creación del contexto de la aplicación
 with app.app_context():
     # Crear la tabla de unión
     bd.create_all()
 
 #Descerializacion
-class ProfesorProgramaSchema(ma.Schema):
+class SemilleroSchema(ma.Schema):
     class Meta:
         fields = ("nombre", "codigoColciencias","facultad","idProyectoFk","idGrupoInFk")    
 
