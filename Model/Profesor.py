@@ -25,4 +25,4 @@ with app.app_context():
 #Descerializacion
 class ProfesorSchema(ma.Schema):
     class Meta:
-        fields=("codigo","telefono","nombre","nombre","Apellido","correo")
+        fields=("codigo","telefono","nombre","Apellido","correo")
