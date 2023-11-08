@@ -1,6 +1,6 @@
 from config.bd import  bd,app,ma
 
-class estudiante(bd.Model):
+class Estudiante(bd.Model):
     __tablename__ ='tblEstudiante'
     codigoE = bd.Column(bd.Integer, primary_key = True)
     nombre = bd.Column(bd.String(50))

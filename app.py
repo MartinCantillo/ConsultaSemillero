@@ -1,10 +1,10 @@
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from config.bd import app, ma, bd
-from Model.Estudiante import estudianteSchema
+from Model.Estudiante import Estudiante, estudianteSchema
 from Model.Profesor import ProfesorSchema
 from Model.Programa import ProgramaSchema
-from Model.Proyecto import ProyectoSchema
+from Model.Proyecto import Proyecto, ProyectoSchema
 from Model.GInvestigacion import GrupoInvestigacion_Schema
 from Model.Semillero import Semillero, SemilleroSchema
 
@@ -28,23 +28,49 @@ proyectos_schema = ProyectoSchema(many=True)
 semilleroSchema = SemilleroSchema()
 semilleros_schema = SemilleroSchema(many=True)
 
-@app.route("/", methods=["GET"])
-def consultarSemillero():
-    semilleros = bd.session.query(Semillero).all()
 
+@app.route("/", methods=['GET'])
+def index():
+    nombre= "Login"
+    return render_template('index.html')
+
+
+@app.route("/traerSemilleros", methods=['GET'])
+def GetSemilleros():
+     results = bd.session.query(Semillero).all() 
+     dato={}   
+     i=0
+     for s in results:
+        i+=1	       
+        dato[i] = {
+        'nombre' :s.nombre, 
+        'facultad':s.facultad          
+        }
+      
+     print(s.nombre )  
+    
+     return jsonify(dato)
+
+@app.route("/GetSemillero", methods=["GET"])
+def consultarSemillero():
+    semilleros = Semillero.query.all()
     resultado = []
+
     for semillero in semilleros:
+        proyectos = Proyecto.query.filter_by(idProyectoFk=semillero.idProyectoFk).all()
+        estudiantes = [estudiante.nombre for proyecto in proyectos for estudiante in Estudiante.query.filter_by(idEstudianteFk=proyecto.idEstudianteFk)]
+
         info_semillero = {
-             "Nombre del Grupo de Investigación": semillero.idGrupoInFk.nombre,
+            "Nombre del Grupo de Investigación": semillero.idGrupoInFk.nombre,
             "Líder del Grupo de Investigación": semillero.idGrupoInFk.lider,
             "Nombre del Semillero": semillero.nombre,
             "Periodo Académico": semillero.periodo_academico,
             "Docente líder del semillero": semillero.idProyectoFk.docente_lider,
-            "Proyectos": [proyecto.nombreProyecto for proyecto in semillero.idProyectoFk],
-            "Objetivos": [proyecto.objetivos for proyecto in semillero.idProyectoFk],
-            "Resultados Obtenidos": [proyecto.resultadosObtenidos for proyecto in semillero.idProyectoFk],
-            "Estudiantes": [estudiante.nombre for proyecto in semillero.idProyectoFk for estudiante in proyecto.idEstudianteFk],
-           "Profesores": [profesor.nombre for profesor in semillero.idGrupoInFk.profesores] 
+            "Proyectos": [proyecto.nombreProyecto for proyecto in proyectos],
+            "Objetivos": [proyecto.objetivos for proyecto in proyectos],
+            "Resultados Obtenidos": [proyecto.resultadosObtenidos for proyecto in proyectos],
+            "Estudiantes": estudiantes,
+            "Profesores": [profesor.nombre for profesor in semillero.idGrupoInFk.profesores]
         }
         resultado.append(info_semillero)
 
