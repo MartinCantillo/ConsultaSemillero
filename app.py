@@ -1,6 +1,6 @@
 
 from flask import Flask, request, jsonify, render_template
-from config.bd import app, ma, bd
+from config.bd import app, bd, ma
 from Model.Estudiante import Estudiante, estudianteSchema
 from Model.Profesor import ProfesorSchema
 from Model.Programa import ProgramaSchema
@@ -43,40 +43,65 @@ def GetSemilleros():
      for s in results:
         i+=1	       
         dato[i] = {
+        "codigoSemillero":s.codigoSemillero,
         'nombre' :s.nombre, 
-        'facultad':s.facultad          
+        'facultad':s.facultad,  
+
         }
       
      print(s.nombre )  
     
      return jsonify(dato)
 
-@app.route("/GetSemillero", methods=["GET"])
-def consultarSemillero():
-    semilleros = Semillero.query.all()
-    resultado = []
+@app.route("/Semillero", methods=['GET'])
+def GoSemilleros():  
+  return render_template("Semillero.html")
 
-    for semillero in semilleros:
-        proyectos = Proyecto.query.filter_by(idProyectoFk=semillero.idProyectoFk).all()
-        estudiantes = [estudiante.nombre for proyecto in proyectos for estudiante in Estudiante.query.filter_by(idEstudianteFk=proyecto.idEstudianteFk)]
+@app.route('/FiltroSemillero', methods=['POST'])
+def GetData():
+   idSemillero=request.json["idSemillero"]
+   print(idSemillero)
+    # Verifica si idSemillero está presente en la solicitud JSON
+   if idSemillero is None:
+       return {"error": "Se requiere el campo 'idSemillero' en la solicitud JSON"}, 400
 
-        info_semillero = {
-            "Nombre del Grupo de Investigación": semillero.idGrupoInFk.nombre,
-            "Líder del Grupo de Investigación": semillero.idGrupoInFk.lider,
-            "Nombre del Semillero": semillero.nombre,
-            "Periodo Académico": semillero.periodo_academico,
-            "Docente líder del semillero": semillero.idProyectoFk.docente_lider,
-            "Proyectos": [proyecto.nombreProyecto for proyecto in proyectos],
-            "Objetivos": [proyecto.objetivos for proyecto in proyectos],
-            "Resultados Obtenidos": [proyecto.resultadosObtenidos for proyecto in proyectos],
-            "Estudiantes": estudiantes,
-            "Profesores": [profesor.nombre for profesor in semillero.idGrupoInFk.profesores]
+    # Consulta con filtro entre las tres entidades para hacer el filtro
+   results = bd.session.query(Semillero, Proyecto, Estudiante)\
+        .join(Proyecto, Semillero.idProyectoFk == Proyecto.codProyecto)\
+        .join(Estudiante, Proyecto.idEstudianteFk == Estudiante.codigoE)\
+        .filter(Semillero.codigoSemillero == idSemillero).all()
+
+    # Diccionario donde se almacena los datos de la info consultada
+   dato = {}
+
+    # Contador para ir recorriendo los datos
+   i = 0
+
+   for semillero, proyecto, estudiante in results:
+        # Incremento i
+        i+=1
+
+        # Creo el diccionario con la info de results
+        dato[i] = {
+            "Semillero": {
+                "codigoSemillero": semillero.codigoSemillero,
+                "idProyectoFk": semillero.idProyectoFk
+            },
+            "Proyecto": {
+                "codProyecto": proyecto.codProyecto,
+                "nombreProyecto": proyecto.nombreProyecto,
+                "objetivos": proyecto.objetivos,
+                "resultadosObtenidos": proyecto.resultadosObtenidos,
+            },
+            "Estudiante": {
+                "codigoE": estudiante.codigoE,
+                "nombre": estudiante.nombre,
+                "apellido": estudiante.apellido,
+            }
         }
-        resultado.append(info_semillero)
 
-    return jsonify({"semilleros_investigacion": resultado})
-
-
+   
+   return dato
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=9566)
