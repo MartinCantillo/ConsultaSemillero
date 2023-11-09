@@ -1,13 +1,13 @@
 
 from flask import Flask, request, jsonify, render_template
 from config.bd import app, bd, ma
-from Model.Objetivos import Objetivos ,ObjetivosSchema
 from Model.Estudiante import Estudiante, estudianteSchema
 from Model.Profesor import ProfesorSchema
 from Model.Programa import ProgramaSchema
 from Model.GInvestigacion import GrupoInvestigacion_Schema
 from Model.Semillero import Semillero, SemilleroSchema
 from Model.Proyecto import Proyecto, ProyectoSchema
+from Model.Objetivos import Objetivos ,ObjetivosSchema
 
 
 
