@@ -6,15 +6,13 @@ class Semillero(bd.Model):
     nombre=bd.Column(bd.String(50))
     codigoColciencias=bd.Column(bd.String(50))
     facultad=bd.Column(bd.String(50))
-    idProyectoFk =bd.Column(bd.Integer,bd.ForeignKey("tblProyecto.codProyecto"))#Relacion con proyecto
     idGrupoInFk =bd.Column(bd.Integer,bd.ForeignKey("tblGInvestigacion.codigoGI"))#Relacion con grupoInvestigacion
 
     #Constructor
-    def __init__(self,nombre,codigoColciencias,facultad,idProyectoFk,idGrupoInFk):
+    def __init__(self,nombre,codigoColciencias,facultad,idGrupoInFk):
         self.nombre=nombre
         self.codigoColciencias= codigoColciencias
         self.facultad= facultad
-        self.idProyectoFk=idProyectoFk
         self.idGrupoInFk=idGrupoInFk
 
 #Creación del contexto de la aplicación
@@ -25,5 +23,5 @@ with app.app_context():
 #Descerializacion
 class SemilleroSchema(ma.Schema):
     class Meta:
-        fields = ("nombre", "codigoColciencias","facultad","idProyectoFk","idGrupoInFk")    
+     fields = ("nombre", "codigoColciencias","facultad","idGrupoInFk")    
 
