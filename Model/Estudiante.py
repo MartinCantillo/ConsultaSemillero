@@ -24,6 +24,6 @@ with app.app_context():
 
 
 #Descerializacion
-class estudianteSchema(ma.Schema):
+class EstudianteSchema(ma.Schema):
     class Meta:
         fields=("nombre","apellido","correo","telefono")

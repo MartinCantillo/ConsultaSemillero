@@ -7,7 +7,6 @@ class Proyecto(bd.Model):
     fechaInicio=bd.Column(bd.String(50))
     fechaFinal=bd.Column(bd.String(50))
     descripcion=bd.Column(bd.String(50))
-    resultadosObtenidos=bd.Column(bd.String(50))
     idEstudianteFk =bd.Column(bd.Integer,bd.ForeignKey("tblEstudiante.codigoE"))
     idSemilleroFk =bd.Column(bd.Integer,bd.ForeignKey("tblSemillero.codigoSemillero"))#Relacion con Semillero
 

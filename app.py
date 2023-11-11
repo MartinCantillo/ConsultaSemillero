@@ -8,6 +8,7 @@ from Model.GInvestigacion import GrupoInvestigacion_Schema
 from Model.Semillero import Semillero, SemilleroSchema
 from Model.Proyecto import Proyecto, ProyectoSchema
 from Model.Objetivos import Objetivos ,ObjetivosSchema
+from Model.ResultadosOb import ResultadosOb,ResultadosObSchema
 
 
 
@@ -52,7 +53,7 @@ def GetSemilleros():
 
         }
       
-     print(s.nombre )  
+     print(dato)
     
      return jsonify(dato)
 
@@ -69,9 +70,11 @@ def GetData():
        return {"error": "Se requiere el campo 'idSemillero' en la solicitud JSON"}, 400
 
     # Consulta con filtro entre las tres entidades para hacer el filtro
-   results = bd.session.query(Semillero, Proyecto, Estudiante)\
+   results = bd.session.query(Semillero, Proyecto, Estudiante,Objetivos,ResultadosOb)\
         .join(Proyecto, Semillero.idProyectoFk == Proyecto.codProyecto)\
         .join(Estudiante, Proyecto.idEstudianteFk == Estudiante.codigoE)\
+        .join(Objetivos,Proyecto.codProyecto==Objetivos.idProyectoOFk)\
+        .join(ResultadosOb,Proyecto.codProyecto==ResultadosOb.idProyectoObFk)\
         .filter(Semillero.codigoSemillero == idSemillero).all()
 
     # Diccionario donde se almacena los datos de la info consultada
@@ -80,7 +83,7 @@ def GetData():
     # Contador para ir recorriendo los datos
    i = 0
 
-   for semillero, proyecto, estudiante in results:
+   for semillero, proyecto, estudiante,objetivos,resultadosOb in results:
         # Incremento i
         i+=1
 
@@ -100,7 +103,17 @@ def GetData():
                 "codigoE": estudiante.codigoE,
                 "nombre": estudiante.nombre,
                 "apellido": estudiante.apellido,
-            }
+            },
+            "Objetivos": {
+                "codigoOb": objetivos.codigoOb,
+                "descripcion": objetivos.descripcion,
+               
+            },
+            "ResultadosOb": {
+                "codigoRO": resultadosOb.codigoRO,
+                "descripcionOb": resultadosOb.descripcionOb,
+               
+            },
         }
 
    
