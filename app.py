@@ -73,25 +73,33 @@ def GetData():
         return {"error": "Se requiere el campo 'idSemillero' en la solicitud JSON"}, 400
 
     # Consulta con filtro entre las tres entidades para hacer el filtro
-    results = bd.session.query(Semillero, Proyecto, Estudiante, Objetivos, ResultadosOb) \
+    results = bd.session.query(Semillero, Proyecto, EstudianteP, Objetivos, ResultadosOb) \
         .join(Proyecto, Semillero.codigoSemillero == Proyecto.idSemilleroFk) \
-        .join(Estudiante, Proyecto.idEstudianteFk == Estudiante.codigoE) \
+        .join(EstudianteP, Proyecto.codigoEstudiantePFk == EstudianteP.codigoEstudianteP) \
+        .join(Estudiante, EstudianteP.codigoEstudianteP == Estudiante.codigoE) \
         .join(Objetivos, Proyecto.codProyecto == Objetivos.idProyectoOFk) \
         .join(ResultadosOb, Proyecto.codProyecto == ResultadosOb.idProyectoObFk) \
         .filter(Semillero.codigoSemillero == idSemillero).all()
 
     # Listas donde se almacenarán los datos de cada entidad
     estudiantes_list = []
+    estudiantesP_list = []
     proyectos_list = []
     objetivos_list = []
     resultadosOb_list = []
 
-    for semillero, proyecto, estudiante, objetivos, resultadosOb in results:
+    for semillero, proyecto, estudiante,estudiantep, objetivos, resultadosOb in results:
         estudiantes_list.append({
             "codigoE": estudiante.codigoE,
             "nombre": estudiante.nombre,
             "apellido": estudiante.apellido,
         })
+        estudiantesP_list.append({
+            "codigoEstudianteP": estudiantep.codigoEstudianteP,
+            "codProyectoFk": estudiantep.codProyectoFk,
+            "idEstudianteFk": estudiantep.idEstudianteFk,
+        })
+
 
         proyectos_list.append({
             "codProyecto": proyecto.codProyecto,
@@ -110,12 +118,14 @@ def GetData():
 
     # Eliminar duplicados de las listas
     estudiantes_list = [dict(t) for t in {tuple(d.items()) for d in estudiantes_list}]
+    estudiantesP_list = [dict(t) for t in {tuple(d.items()) for d in estudiantesP_list}]
     proyectos_list = [dict(t) for t in {tuple(d.items()) for d in proyectos_list}]
     objetivos_list = [dict(t) for t in {tuple(d.items()) for d in objetivos_list}]
     resultadosOb_list = [dict(t) for t in {tuple(d.items()) for d in resultadosOb_list}]
 
     return jsonify({
         "Estudiantes": estudiantes_list,
+        "EstudiantesP":estudiantesP_list,
         "Proyectos": proyectos_list,
         "Objetivos": objetivos_list,
         "ResultadosOb": resultadosOb_list
