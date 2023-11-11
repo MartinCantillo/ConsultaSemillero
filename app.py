@@ -1,7 +1,7 @@
 
 from flask import Flask, request, jsonify, render_template
 from config.bd import app, bd, ma
-from Model.Estudiante import Estudiante, estudianteSchema
+from Model.Estudiante import Estudiante, EstudianteSchema
 from Model.Profesor import ProfesorSchema
 from Model.Programa import ProgramaSchema
 from Model.GInvestigacion import GrupoInvestigacion_Schema
@@ -13,8 +13,8 @@ from Model.ResultadosOb import ResultadosOb,ResultadosObSchema
 
 
 
-Estudiante_schema = estudianteSchema()
-Estudiantes_schema = estudianteSchema(many=True)
+Estudiante_schema = EstudianteSchema()
+Estudiantes_schema = EstudianteSchema(many=True)
 
 GruppoInvestigacion_Schema = GrupoInvestigacion_Schema()
 GrupposInvestigacion_schema = GrupoInvestigacion_Schema(many=True)
