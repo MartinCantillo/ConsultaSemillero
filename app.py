@@ -7,8 +7,10 @@ from Model.Programa import ProgramaSchema
 from Model.GInvestigacion import GrupoInvestigacion_Schema
 from Model.Semillero import Semillero, SemilleroSchema
 from Model.Proyecto import Proyecto, ProyectoSchema
+from Model.EstudianteP import EstudianteP ,EstudiantePSchema
 from Model.Objetivos import Objetivos ,ObjetivosSchema
 from Model.ResultadosOb import ResultadosOb,ResultadosObSchema
+
 
 
 
@@ -62,62 +64,63 @@ def GoSemilleros():
   return render_template("Semillero.html")
 
 @app.route('/FiltroSemillero', methods=['POST'])
+@app.route('/FiltroSemillero', methods=['POST'])
 def GetData():
-   idSemillero=request.json["idSemillero"]
-   print(idSemillero)
+    idSemillero = request.json["idSemillero"]
+
     # Verifica si idSemillero está presente en la solicitud JSON
-   if idSemillero is None:
-       return {"error": "Se requiere el campo 'idSemillero' en la solicitud JSON"}, 400
+    if idSemillero is None:
+        return {"error": "Se requiere el campo 'idSemillero' en la solicitud JSON"}, 400
 
     # Consulta con filtro entre las tres entidades para hacer el filtro
-   results = bd.session.query(Semillero, Proyecto, Estudiante,Objetivos,ResultadosOb)\
-        .join(Proyecto, Semillero.idProyectoFk == Proyecto.codProyecto)\
-        .join(Estudiante, Proyecto.idEstudianteFk == Estudiante.codigoE)\
-        .join(Objetivos,Proyecto.codProyecto==Objetivos.idProyectoOFk)\
-        .join(ResultadosOb,Proyecto.codProyecto==ResultadosOb.idProyectoObFk)\
+    results = bd.session.query(Semillero, Proyecto, Estudiante, Objetivos, ResultadosOb) \
+        .join(Proyecto, Semillero.codigoSemillero == Proyecto.idSemilleroFk) \
+        .join(Estudiante, Proyecto.idEstudianteFk == Estudiante.codigoE) \
+        .join(Objetivos, Proyecto.codProyecto == Objetivos.idProyectoOFk) \
+        .join(ResultadosOb, Proyecto.codProyecto == ResultadosOb.idProyectoObFk) \
         .filter(Semillero.codigoSemillero == idSemillero).all()
 
-    # Diccionario donde se almacena los datos de la info consultada
-   dato = {}
+    # Listas donde se almacenarán los datos de cada entidad
+    estudiantes_list = []
+    proyectos_list = []
+    objetivos_list = []
+    resultadosOb_list = []
 
-    # Contador para ir recorriendo los datos
-   i = 0
+    for semillero, proyecto, estudiante, objetivos, resultadosOb in results:
+        estudiantes_list.append({
+            "codigoE": estudiante.codigoE,
+            "nombre": estudiante.nombre,
+            "apellido": estudiante.apellido,
+        })
 
-   for semillero, proyecto, estudiante,objetivos,resultadosOb in results:
-        # Incremento i
-        i+=1
+        proyectos_list.append({
+            "codProyecto": proyecto.codProyecto,
+            "nombreProyecto": proyecto.nombreProyecto,
+        })
 
-        # Creo el diccionario con la info de results
-        dato[i] = {
-            "Semillero": {
-                "codigoSemillero": semillero.codigoSemillero,
-                "idProyectoFk": semillero.idProyectoFk
-            },
-            "Proyecto": {
-                "codProyecto": proyecto.codProyecto,
-                "nombreProyecto": proyecto.nombreProyecto,
-                "objetivos": proyecto.objetivos,
-                "resultadosObtenidos": proyecto.resultadosObtenidos,
-            },
-            "Estudiante": {
-                "codigoE": estudiante.codigoE,
-                "nombre": estudiante.nombre,
-                "apellido": estudiante.apellido,
-            },
-            "Objetivos": {
-                "codigoOb": objetivos.codigoOb,
-                "descripcion": objetivos.descripcion,
-               
-            },
-            "ResultadosOb": {
-                "codigoRO": resultadosOb.codigoRO,
-                "descripcionOb": resultadosOb.descripcionOb,
-               
-            },
-        }
+        objetivos_list.append({
+            "codigoOb": objetivos.codigoOb,
+            "descripcion": objetivos.descripcion,
+        })
 
-   
-   return dato
+        resultadosOb_list.append({
+            "codigoRO": resultadosOb.codigoRO,
+            "descripcionOb": resultadosOb.descripcionOb,
+        })
+
+    # Eliminar duplicados de las listas
+    estudiantes_list = [dict(t) for t in {tuple(d.items()) for d in estudiantes_list}]
+    proyectos_list = [dict(t) for t in {tuple(d.items()) for d in proyectos_list}]
+    objetivos_list = [dict(t) for t in {tuple(d.items()) for d in objetivos_list}]
+    resultadosOb_list = [dict(t) for t in {tuple(d.items()) for d in resultadosOb_list}]
+
+    return jsonify({
+        "Estudiantes": estudiantes_list,
+        "Proyectos": proyectos_list,
+        "Objetivos": objetivos_list,
+        "ResultadosOb": resultadosOb_list
+    })
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=9566)
