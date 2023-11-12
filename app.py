@@ -6,10 +6,11 @@ from Model.Profesor import ProfesorSchema
 from Model.Programa import ProgramaSchema
 from Model.GInvestigacion import GrupoInvestigacion_Schema
 from Model.Semillero import Semillero, SemilleroSchema
+
 from Model.Proyecto import Proyecto, ProyectoSchema
-from Model.EstudianteP import EstudianteP ,EstudiantePSchema
 from Model.Objetivos import Objetivos ,ObjetivosSchema
 from Model.ResultadosOb import ResultadosOb,ResultadosObSchema
+from Model.EstudianteP import EstudianteP ,EstudiantePSchema
 
 
 
@@ -63,8 +64,8 @@ def GetSemilleros():
 def GoSemilleros():  
   return render_template("Semillero.html")
 
-@app.route('/FiltroSemillero', methods=['POST'])
-@app.route('/FiltroSemillero', methods=['POST'])
+
+@app.route('/FiltroSemillero', methods=['GET'])
 def GetData():
     idSemillero = request.json["idSemillero"]
 
@@ -73,9 +74,9 @@ def GetData():
         return {"error": "Se requiere el campo 'idSemillero' en la solicitud JSON"}, 400
 
     # Consulta con filtro entre las tres entidades para hacer el filtro
-    results = bd.session.query(Semillero, Proyecto, EstudianteP, Objetivos, ResultadosOb) \
+    results = bd.session.query(Semillero, Proyecto, EstudianteP,Estudiante, Objetivos, ResultadosOb) \
         .join(Proyecto, Semillero.codigoSemillero == Proyecto.idSemilleroFk) \
-        .join(EstudianteP, Proyecto.codigoEstudiantePFk == EstudianteP.codigoEstudianteP) \
+        .join(EstudianteP, Proyecto.codProyecto == EstudianteP.codProyectoFk) \
         .join(Estudiante, EstudianteP.codigoEstudianteP == Estudiante.codigoE) \
         .join(Objetivos, Proyecto.codProyecto == Objetivos.idProyectoOFk) \
         .join(ResultadosOb, Proyecto.codProyecto == ResultadosOb.idProyectoObFk) \
@@ -84,34 +85,41 @@ def GetData():
     # Listas donde se almacenarán los datos de cada entidad
     estudiantes_list = []
     estudiantesP_list = []
+    semilleros_list = []
     proyectos_list = []
     objetivos_list = []
     resultadosOb_list = []
+    print(results)
 
-    for semillero, proyecto, estudiante,estudiantep, objetivos, resultadosOb in results:
-        estudiantes_list.append({
-            "codigoE": estudiante.codigoE,
-            "nombre": estudiante.nombre,
-            "apellido": estudiante.apellido,
+    for semillero, proyecto,estudiantep,estudiante,objetivos, resultadosOb in results:
+         semilleros_list.append({
+        "codigoSemillero":semillero.codigoSemillero,
+        'nombre' :semillero.nombre, 
+        'facultad':semillero.facultad,  
         })
-        estudiantesP_list.append({
+         
+         estudiantesP_list.append({
             "codigoEstudianteP": estudiantep.codigoEstudianteP,
             "codProyectoFk": estudiantep.codProyectoFk,
             "idEstudianteFk": estudiantep.idEstudianteFk,
         })
 
-
-        proyectos_list.append({
+         estudiantes_list.append({
+            "codigoE": estudiante.codigoE,
+            "nombre": estudiante.nombre,
+            "apellido": estudiante.apellido,
+        })
+         proyectos_list.append({
             "codProyecto": proyecto.codProyecto,
             "nombreProyecto": proyecto.nombreProyecto,
         })
 
-        objetivos_list.append({
+         objetivos_list.append({
             "codigoOb": objetivos.codigoOb,
             "descripcion": objetivos.descripcion,
         })
 
-        resultadosOb_list.append({
+         resultadosOb_list.append({
             "codigoRO": resultadosOb.codigoRO,
             "descripcionOb": resultadosOb.descripcionOb,
         })
@@ -119,6 +127,7 @@ def GetData():
     # Eliminar duplicados de las listas
     estudiantes_list = [dict(t) for t in {tuple(d.items()) for d in estudiantes_list}]
     estudiantesP_list = [dict(t) for t in {tuple(d.items()) for d in estudiantesP_list}]
+    semilleros_list = [dict(t) for t in {tuple(d.items()) for d in semilleros_list}]
     proyectos_list = [dict(t) for t in {tuple(d.items()) for d in proyectos_list}]
     objetivos_list = [dict(t) for t in {tuple(d.items()) for d in objetivos_list}]
     resultadosOb_list = [dict(t) for t in {tuple(d.items()) for d in resultadosOb_list}]

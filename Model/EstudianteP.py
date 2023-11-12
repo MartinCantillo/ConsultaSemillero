@@ -7,7 +7,7 @@ class EstudianteP(bd.Model):
  codProyectoFk =bd.Column(bd.Integer,bd.ForeignKey("tblProyecto.codProyecto"))#Relacion con tblProyecto
  idEstudianteFk =bd.Column(bd.Integer,bd.ForeignKey("tblEstudiante.codigoE"))#Relacion con Estudiante
 #Constructor
-def __init__(self,codigoEstudianteP,codProyectoFk,idEstudianteFk):
+ def __init__(self,codigoEstudianteP,codProyectoFk,idEstudianteFk):
         self.codigoEstudianteP=codigoEstudianteP
         self.codProyectoFk=codProyectoFk
         self.idEstudianteFk=idEstudianteFk
