@@ -73,12 +73,18 @@
                             cellfechaFinalP.textContent = proyectos.fechaFinal;
                             celldescripcionP.textContent = proyectos.descripcion;
 
-                            let detallesLink = document.createElement("a");
-                            detallesLink.textContent = "Detalles";
-                            detallesLink.href = "Proyectos";
-                            detallesLink.classList.add("btn", "btn-info");
+                            // Crear enlace para detalles y almacenar el código en sessionStorage
+                        let detallesLink = document.createElement("a");
+                        detallesLink.textContent = "Detalles";
+                        detallesLink.href = "Proyectos";  // Página destino
+                        detallesLink.onclick = function () {
+                            sessionStorage.setItem('codProyecto', proyectos.codProyecto);
+                            console.log("enviado" +proyectos.codProyecto)
+                        };
 
-                            DetallesP.appendChild(detallesLink);
+                        detallesLink.classList.add("btn", "btn-info");
+
+                        DetallesP.appendChild(detallesLink);
                         }
                     }
                 })
@@ -86,7 +92,11 @@
                     console.log(error);
                 });
         });
-
+        //Regresar
+        document.getElementById("regresar").addEventListener("click", function () {
+           // Redirigir a otra página Semilleros HTML
+           window.location.href = '/';
+        });
 
     </script>
 

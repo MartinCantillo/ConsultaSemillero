@@ -97,7 +97,7 @@ def GetData():
 
 @app.route('/Detalle', methods=['GET'])
 def GetDetalle():
-    codProyecto = request.json["codProyecto"]
+    codProyecto = request.args.get("codProyecto")
     print(codProyecto)
     # Verifica si idSemillero está presente en la solicitud JSON
     if codProyecto is None:
