@@ -38,44 +38,50 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script>
         document.getElementById("cargarSemilleros").addEventListener("click", function () {
-            let endpoint = '/traerSemilleros';
+        let endpoint = '/traerSemilleros';
 
-            axios.get(endpoint)
-                .then(function (response) {
-                    let data = response.data;
+        axios.get(endpoint)
+            .then(function (response) {
+                let data = response.data;
+                let tablaSemilleros = document.getElementById("tablaSemilleros").getElementsByTagName("tbody")[0];
 
-                    let tablaSemilleros = document.getElementById("tablaSemilleros").getElementsByTagName("tbody")[0];
+                // Limpia el contenido actual de la tabla
+                tablaSemilleros.innerHTML = '';
 
-                    // Limpia el contenido actual de la tabla
-                    tablaSemilleros.innerHTML = '';
+                // Itera a través de los datos y agrega filas a la tabla
+                for (let key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        let semillero = data[key];
+                        let row = tablaSemilleros.insertRow();
+                        let cellCodigo = row.insertCell(0);
+                        let cellNombre = row.insertCell(1);
+                        let cellFacultad = row.insertCell(2);
+                        let cellDetalles = row.insertCell(3);
 
-                    // Itera a través de los datos y agrega filas a la tabla
-                    for (let key in data) {
-                        if (data.hasOwnProperty(key)) {
-                            let semillero = data[key];
-                            let row = tablaSemilleros.insertRow();
-                            let cellCodigo = row.insertCell(0);
-                            let cellNombre = row.insertCell(1);
-                            let cellFacultad = row.insertCell(2);
-                            let cellDetalles = row.insertCell(3);
+                        cellCodigo.textContent = semillero.codigoSemillero;
+                        cellNombre.textContent = semillero.nombre;
+                        cellFacultad.textContent = semillero.facultad;
 
-                            cellCodigo.textContent = semillero.codigoSemillero
-                            cellNombre.textContent = semillero.nombre;
-                            cellFacultad.textContent = semillero.facultad;
+                        // Crear enlace para detalles y almacenar el código en sessionStorage
+                        let detallesLink = document.createElement("a");
+                        detallesLink.textContent = "Detalles";
+                        detallesLink.href = "Semillero";  // Página destino
+                        detallesLink.onclick = function () {
+                            sessionStorage.setItem('codigoSemillero', semillero.codigoSemillero);
+                            console.log("enviado" +semillero.codigoSemillero)
+                        };
 
-                            let detallesLink = document.createElement("a");
-                            detallesLink.textContent = "Detalles";
-                            detallesLink.href = "Semillero";
-                            detallesLink.classList.add("btn", "btn-info");
+                        detallesLink.classList.add("btn", "btn-info");
 
-                            cellDetalles.appendChild(detallesLink);
-                        }
+                        cellDetalles.appendChild(detallesLink);
                     }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    });
+
 
     </script>
 

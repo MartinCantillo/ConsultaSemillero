@@ -62,64 +62,83 @@ def GetSemilleros():
 
 @app.route("/Semillero", methods=['GET'])
 def GoSemilleros():  
-  return render_template("Semillero.html")
+  return render_template("Semilleros.html")
+
+@app.route("/Proyectos", methods=['GET'])
+def GoProyectos():  
+  return render_template("Proyectos.html")
 
 
-@app.route('/FiltroSemillero', methods=['GET'])
+@app.route('/FiltroProyecto', methods=['GET'])
 def GetData():
-    idSemillero = request.json["idSemillero"]
-
+    idSemillero = request.args.get("idSemillero")
+    print(idSemillero)
     # Verifica si idSemillero está presente en la solicitud JSON
     if idSemillero is None:
         return {"error": "Se requiere el campo 'idSemillero' en la solicitud JSON"}, 400
 
-    # Consulta con filtro entre las tres entidades para hacer el filtro
-    results = bd.session.query(Semillero, Proyecto, EstudianteP,Estudiante, Objetivos, ResultadosOb) \
-        .join(Proyecto, Semillero.codigoSemillero == Proyecto.idSemilleroFk) \
-        .join(EstudianteP, Proyecto.codProyecto == EstudianteP.codProyectoFk) \
-        .join(Estudiante, EstudianteP.codigoEstudianteP == Estudiante.codigoE) \
-        .join(Objetivos, Proyecto.codProyecto == Objetivos.idProyectoOFk) \
-        .join(ResultadosOb, Proyecto.codProyecto == ResultadosOb.idProyectoObFk) \
-        .filter(Semillero.codigoSemillero == idSemillero).all()
+    # Consulta en la entidad proyecto donde su fk de semillero sea igual a idSemillero
+    results = bd.session.query(Proyecto) \
+        .filter(Proyecto.idSemilleroFk == idSemillero).all()
 
-    # Listas donde se almacenarán los datos de cada entidad
+    dato = {}
+    i = 0
+    for proyecto in results:
+        i += 1
+        dato[i] = {
+            'codProyecto':proyecto.codProyecto,
+            'nombreProyecto':proyecto.nombreProyecto,
+            'fechaInicio' :proyecto.fechaInicio,
+            'fechaFinal' :proyecto.fechaFinal,
+            'descripcion': proyecto.descripcion,
+            'idSemilleroFk': proyecto.idSemilleroFk       
+        }
+    return jsonify(dato)
+
+@app.route('/Detalle', methods=['GET'])
+def GetDetalle():
+    codProyecto = request.json["codProyecto"]
+    print(codProyecto)
+    # Verifica si idSemillero está presente en la solicitud JSON
+    if codProyecto is None:
+        return {"error": "Se requiere el campo 'idSemillero' en la solicitud JSON"}, 400
+
+    # Consulta en la entidad proyecto donde su fk de semillero sea igual a idSemillero
+    results = bd.session.query(Proyecto,Estudiante,EstudianteP,Objetivos,ResultadosOb) \
+        .join(EstudianteP, Proyecto.codProyecto == EstudianteP.codProyectoFk) \
+        .join(Estudiante, EstudianteP.idEstudianteFk == Estudiante.codigoE) \
+        .join(Objetivos,  Proyecto.codProyecto == Objetivos.idProyectoOFk) \
+        .join(ResultadosOb,  Proyecto.codProyecto == ResultadosOb.idProyectoObFk) \
+        .filter(Proyecto.codProyecto == codProyecto).all()
+
+      # Listas donde se almacenarán los datos de cada entidad
     estudiantes_list = []
-    estudiantesP_list = []
-    semilleros_list = []
     proyectos_list = []
+    estudiantesP_list = []
     objetivos_list = []
     resultadosOb_list = []
-    print(results)
-
-    for semillero, proyecto,estudiantep,estudiante,objetivos, resultadosOb in results:
-         semilleros_list.append({
-        "codigoSemillero":semillero.codigoSemillero,
-        'nombre' :semillero.nombre, 
-        'facultad':semillero.facultad,  
+    for  proyecto,estudiante,estudiantep,objetivos, resultadosOb in results: 
+        proyectos_list.append({
+            "codProyecto": proyecto.codProyecto,
+            "nombreProyecto": proyecto.nombreProyecto,
         })
-         
-         estudiantesP_list.append({
-            "codigoEstudianteP": estudiantep.codigoEstudianteP,
-            "codProyectoFk": estudiantep.codProyectoFk,
-            "idEstudianteFk": estudiantep.idEstudianteFk,
-        })
-
-         estudiantes_list.append({
+        estudiantes_list.append({
             "codigoE": estudiante.codigoE,
             "nombre": estudiante.nombre,
             "apellido": estudiante.apellido,
         })
-         proyectos_list.append({
-            "codProyecto": proyecto.codProyecto,
-            "nombreProyecto": proyecto.nombreProyecto,
+        estudiantesP_list.append({
+            "codigoEstudianteP": estudiantep.codigoEstudianteP,
+            "codProyectoFk": estudiantep.codProyectoFk,
+            "idEstudianteFk": estudiantep.idEstudianteFk,
         })
-
-         objetivos_list.append({
+        
+        objetivos_list.append({
             "codigoOb": objetivos.codigoOb,
             "descripcion": objetivos.descripcion,
         })
 
-         resultadosOb_list.append({
+        resultadosOb_list.append({
             "codigoRO": resultadosOb.codigoRO,
             "descripcionOb": resultadosOb.descripcionOb,
         })
@@ -127,15 +146,12 @@ def GetData():
     # Eliminar duplicados de las listas
     estudiantes_list = [dict(t) for t in {tuple(d.items()) for d in estudiantes_list}]
     estudiantesP_list = [dict(t) for t in {tuple(d.items()) for d in estudiantesP_list}]
-    semilleros_list = [dict(t) for t in {tuple(d.items()) for d in semilleros_list}]
-    proyectos_list = [dict(t) for t in {tuple(d.items()) for d in proyectos_list}]
     objetivos_list = [dict(t) for t in {tuple(d.items()) for d in objetivos_list}]
     resultadosOb_list = [dict(t) for t in {tuple(d.items()) for d in resultadosOb_list}]
 
     return jsonify({
         "Estudiantes": estudiantes_list,
         "EstudiantesP":estudiantesP_list,
-        "Proyectos": proyectos_list,
         "Objetivos": objetivos_list,
         "ResultadosOb": resultadosOb_list
     })
