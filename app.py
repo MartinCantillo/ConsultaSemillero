@@ -4,7 +4,7 @@ from config.bd import app, bd, ma
 from Model.Estudiante import Estudiante, EstudianteSchema
 from Model.Profesor import ProfesorSchema
 from Model.Programa import ProgramaSchema
-from Model.GInvestigacion import GrupoInvestigacion_Schema
+from Model.GInvestigacion import GInvestigacion, GrupoInvestigacion_Schema
 from Model.Semillero import Semillero, SemilleroSchema
 
 from Model.Proyecto import Proyecto, ProyectoSchema
@@ -53,7 +53,7 @@ def GetSemilleros():
         "codigoSemillero":s.codigoSemillero,
         'nombre' :s.nombre, 
         'facultad':s.facultad,  
-
+        "programa":s.programa
         }
       
      print(dato)
@@ -156,6 +156,42 @@ def GetDetalle():
         "ResultadosOb": resultadosOb_list
     })
 
+@app.route('/getGrupoI', methods=['GET'])
+def GetD():
+    # Verifica si hay datos JSON en la solicitud
+    if not request.is_json:
+        return {"error": "La solicitud debe contener datos JSON"}, 400
+
+    # Obtén el idSemillero de los datos JSON
+    idSemillero = request.json.get("idSemillero")
+    
+    # Verifica si idSemillero está presente en la solicitud JSON
+    if idSemillero is None:
+        return {"error": "Se requiere el campo 'idSemillero' en la solicitud JSON"}, 400
+
+    try:
+        # Consulta en la entidad Semillero para obtener el idGrupoInFk
+        semillero = Semillero.query.filter(Semillero.codigoSemillero==idSemillero).first()
+        print(semillero)
+        if semillero is None:
+            return {"error": f"No se encontró Semillero con código {idSemillero}"}, 404
+
+        # Utiliza el idGrupoInFk para filtrar en la entidad GInvestigacion
+        results = GInvestigacion.query.filter(GInvestigacion.codigoGI==semillero.idGrupoInFk).first()
+        print(results)
+        dato = {}
+        dato = {
+            'codigoGI': results.codigoGI,
+            'nombre': results.nombre,
+            'lider': results.lider,
+            'lineaInvestigacion': results.lineaInvestigacion,
+               
+        }
+        return jsonify(dato)
+        
+
+    except Exception as e:
+        return {"error": str(e)}, 500  # Devuelve un mensaje de error y un código de estado 500 en caso de excepción
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=9566)

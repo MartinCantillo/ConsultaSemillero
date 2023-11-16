@@ -49,7 +49,7 @@
                     </div>
                     <label for="staticFecha" class="col-sm-2 col-form-label">Fecha:</label>
                     <div class="col-sm-4">
-                        <input type="text" readonly class="form-control-plaintext" id="staticFecha" value="">
+                        <input type="text" readonly class="form-control-plaintext" id="staticFecha" value="17/11/2023">
                     </div>
                 </div>
 
@@ -82,7 +82,7 @@
                 </div>
                 <label for="staticPeriodoA" class="col-sm-2 col-form-label">Periodo Academico:</label>
                 <div class="col-sm-4">
-                    <input type="text" readonly class="form-control-plaintext" id="staticPeriodoA" value="">
+                    <input type="text" readonly class="form-control-plaintext" id="staticPeriodoA" value="2023-2">
                 </div>
             </div>
 
@@ -116,9 +116,10 @@
             </div>
             <hr>
             <div class="container">
-                
-                    <label for="" class="centrar-texto negrita">PRESENTACIÓN DE INFORME DE RESULTADOS (USO EXCLUSIVO DEL GRUPO DE
-                        INVESTIGACIÓN)</label>
+
+                <label for="" class="centrar-texto negrita">PRESENTACIÓN DE INFORME DE RESULTADOS (USO EXCLUSIVO DEL
+                    GRUPO DE
+                    INVESTIGACIÓN)</label>
             </div>
             <hr>
         </form>
@@ -139,58 +140,62 @@
         <div class="form-group row">
             <label for="staticObservaciones" class="col-sm-2 col-form-label">Observaciones:</label>
             <br>
-            
-            <label for="" class="centrar-texto negrita">SEGUIMIENTO DE LA ACTIVIDAD INVESTIGATIVA DE SEMILLEROS DE INVESTIGACIÓN</label>
-          <br>
-          <label for="" class="centrar-texto negrita">Observaciones generales</label>
-          <hr>
-          <br>
-          <br>
-          <br>
-          <hr>
-          <label for="" class="centrar-texto negrita">USO EXCLUSIVO LÍDER DEL GRUPO</label>
-          <br>
-          <hr>
-          <form>
-            <div class="form-group row">
-                <label for="staticNombreS" class="col-sm-2 col-form-label">Firma docente lider del semillero:</label>
-                <div class="col-sm-4">
-                    <input type="text" readonly class="form-control-plaintext" id="staticNombreS" value="">
+
+            <label for="" class="centrar-texto negrita">SEGUIMIENTO DE LA ACTIVIDAD INVESTIGATIVA DE SEMILLEROS DE
+                INVESTIGACIÓN</label>
+            <br>
+            <label for="" class="centrar-texto negrita">Observaciones generales</label>
+            <hr>
+            <br>
+            <br>
+            <br>
+            <hr>
+            <label for="" class="centrar-texto negrita">USO EXCLUSIVO LÍDER DEL GRUPO</label>
+            <br>
+            <hr>
+            <form>
+                <div class="form-group row">
+                    <label for="staticNS" class="col-sm-2 col-form-label">Firma docente lider del
+                        semillero:</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="staticNS" value="">
+                    </div>
+                    <label for="staticPA" class="col-sm-2 col-form-label">Manifiesto la veracidad de toda la
+                        información contemplada en el presente documento en concordancia con los requisitos solicitados
+                        y en beneficio de la Universidad Libre</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="staticPA" value="">
+                    </div>
                 </div>
-                <label for="staticPeriodoA" class="col-sm-2 col-form-label">Manifiesto la veracidad de toda la información contemplada en el presente documento en concordancia con los requisitos solicitados y en beneficio de la Universidad Libre</label>
-                <div class="col-sm-4">
-                    <input type="text" readonly class="form-control-plaintext" id="staticPeriodoA" value="">
-                </div>
-            </div>
- 
-        </form>
-        <hr>
-        <label for="" class="centrar-texto negrita">USO EXCLUSIVO DEL CENTRO DE INVESTIGACIONES DE FACULTAD</label>
-        <br>
-        <hr>
-        <label for="" class="centrar-texto negrita">Registro del tramite</label>
-        <hr>
-       
+
+            </form>
+            <hr>
+            <label for="" class="centrar-texto negrita">USO EXCLUSIVO DEL CENTRO DE INVESTIGACIONES DE FACULTAD</label>
+            <br>
+            <hr>
+            <label for="" class="centrar-texto negrita">Registro del tramite</label>
+            <hr>
+
         </div>
         <label for="staticPeriodoA" class="col-sm-2 col-form-label">Validacion del tramite:</label>
-    </form>
-    
-    <div class="form-group row">
-        
-        <label for="staticGrupoI" class="col-sm-2 col-form-label">Nombre:</label>
-        <div class="col-sm-10">
-            <input type="text" readonly class="form-control-plaintext" id="staticGrupoI" value="">
+        </form>
+
+        <div class="form-group row">
+
+            <label for="staticGrupoI" class="col-sm-2 col-form-label">Nombre:</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="staticGrupoI" value="">
+            </div>
+
+
+            <label for="staticGrupoI" class="col-sm-2 col-form-label">Fecha:</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="staticGrupoI" value="">
+            </div>
+            <label for="staticGrupoI" class="col-sm-2 col-form-label">Firma:</label>
+
         </div>
-      
-              
-        <label for="staticGrupoI" class="col-sm-2 col-form-label">Fecha:</label>
-        <div class="col-sm-10">
-            <input type="text" readonly class="form-control-plaintext" id="staticGrupoI" value="">
-        </div>
-        <label for="staticGrupoI" class="col-sm-2 col-form-label">Firma:</label>
-        
-    </div>
-    </form>
+        </form>
         <button id="consultarProyectos" class="btn btn-primary">Consultar proyectos</button>
         <button id="regresar" class="btn btn-primary">Regresar</button>
     </div>
@@ -199,10 +204,17 @@
     <script>
         document.getElementById("consultarProyectos").addEventListener("click", function () {
             let endpoint = '/FiltroProyecto';
+            let endpoint2 = '/traerSemilleros';
 
             // Recuperar el códigoSemillero almacenado en sessionStorage
             var codigoSemillero = sessionStorage.getItem('codigoSemillero');
-            console.log("enviado a axius" + codigoSemillero);
+            // Recuperar el códigoSemillero almacenado en sessionStorage
+            var facultadSemillero = sessionStorage.getItem('facultadSemillero');
+            document.getElementById("staticFacultad").value = facultadSemillero;
+            //   console.log("enviado a axius" + codigoSemillero);
+
+            var programaSemillero = sessionStorage.getItem('programaSemillero');
+            document.getElementById("staticPrograma").value = programaSemillero;
             axios.get(endpoint + '?idSemillero=' + encodeURIComponent(codigoSemillero))
                 .then(function (response) {
                     let data = response.data;
@@ -242,6 +254,18 @@
                             detallesLink.classList.add("btn", "btn-info");
 
                             DetallesP.appendChild(detallesLink);
+                            axios.get(endpoint2 + '?idSemillero=' + encodeURIComponent(codigoSemillero))
+                                .then(function (response) {
+                                    let data2 = response.data;
+                                    // Llenar la información de la facultad en el campo facultad
+                                    //  document.getElementById("staticFacultad").value = data2.idSemilleroFk;
+
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
+
+
                         }
                     }
                 })

@@ -56,12 +56,13 @@
                         let cellCodigo = row.insertCell(0);
                         let cellNombre = row.insertCell(1);
                         let cellFacultad = row.insertCell(2);
-                        let cellDetalles = row.insertCell(3);
+                        let cellPrograma = row.insertCell(3);
+                        let cellDetalles = row.insertCell(4);
 
                         cellCodigo.textContent = semillero.codigoSemillero;
                         cellNombre.textContent = semillero.nombre;
                         cellFacultad.textContent = semillero.facultad;
-
+                        cellPrograma.textContent = semillero.programa;
                         // Crear enlace para detalles y almacenar el código en sessionStorage
                         let detallesLink = document.createElement("a");
                         detallesLink.textContent = "Detalles";
@@ -69,6 +70,7 @@
                         detallesLink.onclick = function () {
                             sessionStorage.setItem('codigoSemillero', semillero.codigoSemillero);
                             console.log("enviado" +semillero.codigoSemillero)
+                            sessionStorage.setItem('facultadSemillero', semillero.facultad);
                         };
 
                         detallesLink.classList.add("btn", "btn-info");
