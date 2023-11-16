@@ -95,6 +95,8 @@ def GetData():
             'idSemilleroFk': proyecto.idSemilleroFk       
         }
     return jsonify(dato)
+'''
+
 
 @app.route('/Detalle', methods=['GET'])
 def GetDetalle():
@@ -155,7 +157,7 @@ def GetDetalle():
         "EstudiantesP":estudiantesP_list,
         "Objetivos": objetivos_list,
         "ResultadosOb": resultadosOb_list
-    })
+    })'''
 
 @app.route('/getGrupoI', methods=['GET'])
 def GetD():
@@ -194,7 +196,7 @@ def GetD():
 
 @app.route('/Detalle2', methods=['GET'])
 def GetDetalle2():
-    idSemillero = request.json["idSemillero"]
+    idSemillero = request.args.get("idSemillero")
     print(idSemillero)
     # Verifica si idSemillero está presente en la solicitud JSON
     if idSemillero is None:
