@@ -25,6 +25,7 @@
                     <th>Codigo</th>
                     <th>Nombre</th>
                     <th>Facultad</th>
+                    <th>Programa</th>
                     <th>Detalles</th>
                 </tr>
             </thead>
@@ -71,6 +72,8 @@
                             sessionStorage.setItem('codigoSemillero', semillero.codigoSemillero);
                             console.log("enviado" +semillero.codigoSemillero)
                             sessionStorage.setItem('facultadSemillero', semillero.facultad);
+                            sessionStorage.setItem('programaSemillero', semillero.programa);
+                            sessionStorage.setItem('nombreSemillero', semillero.nombre);
                         };
 
                         detallesLink.classList.add("btn", "btn-info");
